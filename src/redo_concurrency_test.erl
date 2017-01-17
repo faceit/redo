@@ -28,7 +28,7 @@ run(NumPids, NumOps) ->
     io:format("== THIS TEST RELIES ON A LOCAL REDIS SERVER RUNNING ON localhost:6379         ==~n"),
     io:format("================================================================================~n"),
 
-    random:seed(now()),
+    random:seed(os:timestamp()),
 
     case whereis(redo) of
         undefined ->

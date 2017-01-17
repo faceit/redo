@@ -273,11 +273,23 @@ handle_info({tcp_closed, Sock}, #state{sock=Sock}=State) ->
             {noreply, State1#state{sock=undefined}, 1000}
     end;
 
+handle_info({tcp_error, Sock, _Reason}, #state{sock=Sock, reconnect=true}=State) ->
+    State1 = close_connection(State),
+
+    %% reconnect to redis
+    case connect(State1) of
+        State2 when is_record(State2, state) ->
+            {noreply, State2};
+        _Err ->
+            {noreply, State1#state{sock=undefined}, 1000}
+    end;
+
 handle_info({tcp_error, Sock, Reason}, #state{sock=Sock}=State) ->
     ?WARN("at=tcp_error sock=~p reason=~p",
           [Sock, Reason]),
     CState = close_connection(State#state{sock=undefined}),
-    {stop, normal, CState};
+    %% stop with a non-normal reason
+    {stop, tcp_error, CState};
 
 %% attempt to reconnect to redis
 handle_info(timeout, State = #state{}) ->
