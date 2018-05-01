@@ -1,5 +1,5 @@
 %% Copyright (c) 2011 Jacob Vorreuter <jacob.vorreuter@gmail.com>
-%% 
+%%
 %% Permission is hereby granted, free of charge, to any person
 %% obtaining a copy of this software and associated documentation
 %% files (the "Software"), to deal in the Software without
@@ -8,10 +8,10 @@
 %% copies of the Software, and to permit persons to whom the
 %% Software is furnished to do so, subject to the following
 %% conditions:
-%% 
+%%
 %% The above copyright notice and this permission notice shall be
 %% included in all copies or substantial portions of the Software.
-%% 
+%%
 %% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 %% EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 %% OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -27,8 +27,6 @@ run(NumPids, NumOps) ->
     io:format("================================================================================~n"),
     io:format("== THIS TEST RELIES ON A LOCAL REDIS SERVER RUNNING ON localhost:6379         ==~n"),
     io:format("================================================================================~n"),
-
-    random:seed(os:timestamp()),
 
     case whereis(redo) of
         undefined ->
@@ -53,7 +51,7 @@ worker(Parent, N, 0) ->
 worker(Parent, N, NumOps) ->
     StrN = integer_to_list(N),
     StrOp = integer_to_list(NumOps),
-    case random:uniform(100) of
+    case rand:uniform(100) of
         R when R > 0, R =< 24 ->
             Key = iolist_to_binary([StrN, ":", StrOp, ":STRING"]),
             Val = iolist_to_binary(["STRING:", StrN, ":", StrOp]),
